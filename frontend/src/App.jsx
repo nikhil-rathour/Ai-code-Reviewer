@@ -111,7 +111,7 @@ function App() {
         >
           {/* Paste Button */}
           <div className="flex justify-between items-center px-4 pt-3 pb-1">
-            <span className="text-sm font-semibold text-gray-400">Your Code</span>
+            <span className="text-sm font-semibold text-gray-400">Code Editor</span>
             <button
               onClick={pasteClipboard}
               className={`text-xs px-3 py-1 rounded-md shadow ${
@@ -126,22 +126,24 @@ function App() {
 
           {/* Code Editor with Border */}
           <div className="p-3 flex-1 overflow-auto border rounded-xl mx-4 mb-4 focus-within:ring-2 focus-within:ring-blue-400"
-               style={{ borderColor: isDarkMode ? '#4B5563' : '#D1D5DB' }}>
-            <Editor
-              value={code}
-              onValueChange={code => setcode(code)}
-              highlight={code => prism.highlight(code, prism.languages.js, 'js')}
-              padding={10}
-              style={{
-                fontFamily: '"Fira code", "Fira Mono", monospace',
-                fontSize: 15,
-                backgroundColor: isDarkMode ? 'black' : '#f9f9f9',
-                color: isDarkMode ? 'white' : '#1e1e1e',
-                outline: 'none',
-                minHeight: '100%',
-              }}
-            />
-          </div>
+     style={{ borderColor: isDarkMode ? '#4B5563' : '#D1D5DB' }}>
+  <Editor
+    value={code}
+    onValueChange={code => setcode(code)}
+    highlight={code => prism.highlight(code, prism.languages.js, 'js')}
+    padding={10}
+    style={{
+      fontFamily: '"Fira code", "Fira Mono", monospace',
+      fontSize: 15,
+      backgroundColor: '#1e1e1e',     // Always dark
+      color: 'orange',                // Always light text
+      outline: 'none',
+      minHeight: '100%',
+      borderRadius: '0.75rem'
+    }}
+  />
+</div>
+
 
           {/* Review Button */}
           <div className="px-6 pb-6">
@@ -149,7 +151,7 @@ function App() {
               className={`w-full h-10 rounded-lg flex items-center justify-center duration-200 ${
                 isDarkMode 
                   ? 'bg-gray-600 text-white hover:bg-gray-500' 
-                  : 'bg-blue-600 text-white hover:bg-blue-500'
+                  : 'bg-slate-600 text-white hover:bg-slate-800'
               } disabled:opacity-50 disabled:cursor-not-allowed`}
               onClick={reviewCode}
               disabled={isLoading}
