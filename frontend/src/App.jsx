@@ -60,11 +60,11 @@ function App() {
 
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
-  // const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
   async function reviewCode() {
     setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:5000/ai/get-review", { code });
+      const response = await axios.post(backendUrl, { code });
       setreview(response.data);
     } catch (error) {
       setreview('Error: Unable to review code. Please try again.');
