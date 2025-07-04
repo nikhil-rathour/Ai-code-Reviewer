@@ -64,10 +64,10 @@ function App() {
   async function reviewCode() {
     setIsLoading(true);
     try {
-      const response = await axios.post(backendUrl, { code });
+      const response = await axios.post(backendUrl , { code });
       setreview(response.data);
     } catch (error) {
-      setreview('Error: Unable to review code. Please try again.');
+      setreview('Error: server error.');
     } finally {
       setIsLoading(false);
     }
