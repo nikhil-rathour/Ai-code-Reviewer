@@ -33,51 +33,39 @@ function App() {
   </div>
 
   <script>
-    // Get DOM elements
     const textarea = document.getElementById('text-input');
     const charCount = document.getElementById('char-count');
     const wordCount = document.getElementById('word-count');
 
-    // Function to count characters and words
     function updateCounts() {
       const text = textarea.value;
-      
-      // Count characters
       charCount.textContent = text.length;
-
-      // Count words (ignoring extra spaces)
-      const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+      const words = text.trim().split(/\\s+/).filter(word => word.length > 0);
       wordCount.textContent = words.length;
     }
 
-    // Event listener on input
     textarea.addEventListener('input', updateCounts);
   </script>
 
 </body>
-</html>
-`)
-  const [review, setreview] = useState()
-  const [isDarkMode, setIsDarkMode] = useState(true)
-  const [isLoading, setIsLoading] = useState(false)
+</html>`);
+
+  const [review, setreview] = useState();
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Highlight all code blocks on the page
     prism.highlightAll();
-  })
+  });
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
-  //hendel backend 
   const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL;
   async function reviewCode() {
     setIsLoading(true);
-    
     try {
-      const response = await axios.post(backendUrl, {code})
-      setreview(response.data)
+      const response = await axios.post(backendUrl, { code });
+      setreview(response.data);
     } catch (error) {
       setreview('Error: Unable to review code. Please try again.');
     } finally {
@@ -85,9 +73,18 @@ function App() {
     }
   }
 
+  async function pasteClipboard() {
+    try {
+      const text = await navigator.clipboard.readText();
+      setcode(prev => prev + "\n" + text);
+    } catch (err) {
+      alert("Paste failed: " + err.message);
+    }
+  }
+
   return (
     <>
-      {/* Theme Toggle Button */}
+      {/* Theme Toggle */}
       <button
         onClick={toggleTheme}
         className={`fixed top-6 right-6 z-50 p-3 rounded-lg border transition-all duration-200 hover:scale-105 shadow-lg ${
@@ -106,10 +103,30 @@ function App() {
       <main className={`flex md:flex-row h-screen p-4 gap-3 rounded-lg transition-colors duration-300 ${
         isDarkMode ? 'bg-stone-900' : 'bg-gray-100'
       }`}>
-        <div className={`left min-w-[50%] h-full rounded-xl relative overflow-hidden ${
-          isDarkMode ? 'bg-black' : 'bg-gray-900 border border-gray-300'
-        }`}>
-          <div className="p-3 rounded-s-xl h-full overflow-auto">
+        {/* Code Editor Panel */}
+        <div
+          className={`left min-w-[50%] h-full rounded-xl relative flex flex-col overflow-hidden ${
+            isDarkMode ? 'bg-black' : 'bg-white'
+          }`}
+        >
+          {/* Paste Button */}
+          <div className="flex justify-between items-center px-4 pt-3 pb-1">
+            <span className="text-sm font-semibold text-gray-400">Your Code</span>
+            <button
+              onClick={pasteClipboard}
+              className={`text-xs px-3 py-1 rounded-md shadow ${
+                isDarkMode
+                  ? 'bg-gray-700 text-white hover:bg-gray-600'
+                  : 'bg-gray-200 text-black hover:bg-gray-300'
+              }`}
+            >
+              Paste
+            </button>
+          </div>
+
+          {/* Code Editor with Border */}
+          <div className="p-3 flex-1 overflow-auto border rounded-xl mx-4 mb-4 focus-within:ring-2 focus-within:ring-blue-400"
+               style={{ borderColor: isDarkMode ? '#4B5563' : '#D1D5DB' }}>
             <Editor
               value={code}
               onValueChange={code => setcode(code)}
@@ -118,31 +135,38 @@ function App() {
               style={{
                 fontFamily: '"Fira code", "Fira Mono", monospace',
                 fontSize: 15,
-                backgroundColor: isDarkMode ? 'black' : '#1a1a1a',
-                color: isDarkMode ? 'white' : '#f8f8f2'
+                backgroundColor: isDarkMode ? 'black' : '#f9f9f9',
+                color: isDarkMode ? 'white' : '#1e1e1e',
+                outline: 'none',
+                minHeight: '100%',
               }}
             />
           </div>
-          <button
-            className={`review h-10 rounded-lg flex items-center justify-center w-40 duration-200 absolute bottom-6 right-6 ${
-              isDarkMode 
-                ? 'bg-gray-600 text-white hover:bg-gray-500' 
-                : 'bg-blue-600 text-white hover:bg-blue-500'
-            } disabled:opacity-50 disabled:cursor-not-allowed`}
-            onClick={reviewCode}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                Loading...
-              </>
-            ) : (
-              'Review'
-            )}
-          </button>
+
+          {/* Review Button */}
+          <div className="px-6 pb-6">
+            <button
+              className={`w-full h-10 rounded-lg flex items-center justify-center duration-200 ${
+                isDarkMode 
+                  ? 'bg-gray-600 text-white hover:bg-gray-500' 
+                  : 'bg-blue-600 text-white hover:bg-blue-500'
+              } disabled:opacity-50 disabled:cursor-not-allowed`}
+              onClick={reviewCode}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Loading...
+                </>
+              ) : (
+                'Review'
+              )}
+            </button>
+          </div>
         </div>
 
+        {/* Output Panel */}
         <div className={`right overflow-auto min-w-[50%] h-full rounded-xl p-4 transition-colors duration-300 ${
           isDarkMode ? 'bg-stone-300 text-gray-900' : 'bg-gray-50 border border-gray-200 text-gray-900'
         }`}>
@@ -156,16 +180,14 @@ function App() {
               </p>
             </div>
           ) : (
-            <Markdown 
-              rehypePlugins={[rehypeHighlight]}
-            >
+            <Markdown rehypePlugins={[rehypeHighlight]}>
               {review}
             </Markdown>
           )}
         </div>
       </main>
     </>
-  )
+  );
 }
 
 export default App;
