@@ -14,41 +14,59 @@ function App() {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Word & Character Counter</title>
+  <title>AI Code Reviewer</title>
   <style>
-    body { font-family: Arial; padding: 20px; }
-    textarea { width: 100%; height: 150px; }
-    .count-box { margin-top: 10px; font-size: 18px; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f7fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #333;
+    }
+
+    .logo-container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover {
+      transform: scale(1.05);
+    }
+
+    .logo {
+      width: 150px;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .title {
+      font-size: 24px;
+      margin-top: 20px;
+      color: #0077b6;
+    }
   </style>
 </head>
 <body>
-
-  <h2>Word & Character Counter</h2>
-
-  <textarea id="text-input" placeholder="Type something here..."></textarea>
-
-  <div class="count-box">
-    Characters: <span id="char-count">0</span><br>
-    Words: <span id="word-count">0</span>
+  <div class="logo-container">
+    <img src="logo.png" alt="AI Code Reviewer Logo" class="logo">
+    <div class="title">AI Code Reviewer</div>
   </div>
 
   <script>
-    const textarea = document.getElementById('text-input');
-    const charCount = document.getElementById('char-count');
-    const wordCount = document.getElementById('word-count');
-
-    function updateCounts() {
-      const text = textarea.value;
-      charCount.textContent = text.length;
-      const words = text.trim().split(/\\s+/).filter(word => word.length > 0);
-      wordCount.textContent = words.length;
-    }
-
-    textarea.addEventListener('input', updateCounts);
+    console.log("Welcome to AI Code Reviewer");
   </script>
-
 </body>
-</html>`);
+</html>
+`);
 
   const [review, setreview] = useState();
   const [isDarkMode, setIsDarkMode] = useState(true);
